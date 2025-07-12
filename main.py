@@ -54,7 +54,7 @@ def main():
         return
 
     folder = Path(args.directory)
-    delay_seconds = args.interval * 600
+    delay_seconds = args.interval * 3600
 
     print(f"Запуск публикации из папки '{folder}', интервал: {args.interval} час(а).")
     publish_photos_loop(args.token, args.channel, folder, delay_seconds)

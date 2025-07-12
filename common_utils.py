@@ -2,11 +2,6 @@ import os
 import requests
 from pathlib import Path
 from urllib.parse import urlparse
-from dotenv import load_dotenv
-
-
-def load_env():
-    load_dotenv()
 
 
 def get_extension_from_url(url: str) -> str:

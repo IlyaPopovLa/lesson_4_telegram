@@ -1,7 +1,8 @@
 import argparse
 import requests
 from pathlib import Path
-from common_utils import download_image, load_env
+from common_utils import download_image
+from main import load_dotenv
 
 
 def fetch_spacex_launch_photos(launch_id: str | None = None):
@@ -23,7 +24,7 @@ def fetch_spacex_launch_photos(launch_id: str | None = None):
 
 
 if __name__ == "__main__":
-    load_env()
+    load_dotenv()
 
     parser = argparse.ArgumentParser(description="Скачать фото запуска SpaceX по ID или последний запуск")
     parser.add_argument("--id", type=str, help="ID запуска SpaceX")

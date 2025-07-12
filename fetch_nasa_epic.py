@@ -1,7 +1,8 @@
 import requests
 from pathlib import Path
 from datetime import datetime
-from common_utils import download_image, load_env
+from common_utils import download_image
+from main import load_dotenv
 import os
 
 
@@ -41,5 +42,5 @@ def fetch_nasa_epic_photos():
 
 
 if __name__ == "__main__":
-    load_env()
+    load_dotenv()
     fetch_nasa_epic_photos()

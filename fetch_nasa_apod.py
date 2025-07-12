@@ -1,7 +1,8 @@
 import requests
-from common_utils import download_image, load_env
+from common_utils import download_image
 import os
 from pathlib import Path
+from main import load_dotenv
 
 
 def fetch_nasa_apod_photos():
@@ -39,5 +40,5 @@ def fetch_nasa_apod_photos():
 
 
 if __name__ == "__main__":
-    load_env()
+    load_dotenv()
     fetch_nasa_apod_photos()
