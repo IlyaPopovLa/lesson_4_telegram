@@ -5,28 +5,32 @@ from pathlib import Path
 from main import load_dotenv
 
 
-def fetch_nasa_apod_photos():
-    api_key = os.getenv("NASA_API_KEY")
+PHOTOS_COUNT = 30
+
+def fetch_nasa_apod_photos(api_key: str, photos_count: int = PHOTOS_COUNT):
 
     api_url = "https://api.nasa.gov/planetary/apod"
-    params = {"api_key": api_key, "count": 30}
+    params = {
+        "api_key": api_key,
+        "count": photos_count
+    }
 
     try:
         response = requests.get(api_url, params=params)
         response.raise_for_status()
-        data = response.json()
+        apod_response = response.json()
     except requests.RequestException as e:
         print(f"Ошибка при получении данных NASA APOD: {e}")
         return
 
     photo_urls = []
-    if isinstance(data, list):
-        for item in data:
+    if isinstance(apod_response, list):
+        for item in apod_response:
             url = item.get("url")
             if url:
                 photo_urls.append(url)
     else:
-        url = data.get("url")
+        url = apod_response.get("url")
         if url:
             photo_urls.append(url)
 
@@ -41,4 +45,5 @@ def fetch_nasa_apod_photos():
 
 if __name__ == "__main__":
     load_dotenv()
-    fetch_nasa_apod_photos()
+    api_key = os.getenv("NASA_API_KEY")
+    fetch_nasa_apod_photos(api_key)

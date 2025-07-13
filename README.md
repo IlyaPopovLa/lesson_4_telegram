@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ```
 NASA_API_KEY=ваш_ключ_NASA
 TELEGRAM_TOKEN=ваш_токен_Telegram_бота
-CHANNEL_ID=@имя_вашего_канала
+TG_CHAT_ID=@имя_вашего_канала
 ```
 
 ## Использование скриптов

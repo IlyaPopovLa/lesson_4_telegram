@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from telegram import Bot
 
 
-def publish_photos_loop(token: str, channel_id: str, folder: Path, delay_seconds: int):
+def publish_photos_loop(token: str, tg_chat_id: str, folder: Path, delay_seconds: int):
     bot = Bot(token=token)
     photos = list(folder.glob("*.*"))
     if not photos:
@@ -19,10 +19,22 @@ def publish_photos_loop(token: str, channel_id: str, folder: Path, delay_seconds
         for photo_path in photos:
             try:
                 with open(photo_path, "rb") as photo_file:
-                    bot.send_photo(chat_id=channel_id, photo=photo_file)
-                print(f"Опубликовано фото: {photo_path.name}")
-            except Exception as e:
-                print(f"Ошибка при публикации {photo_path.name}: {e}")
+                    try:
+                        bot.send_photo(chat_id=tg_chat_id, photo=photo_file)
+                    except ValueError as e:
+                        print(f"Ошибка значения при отправке {photo_path.name}: {e}")
+                    except TypeError as e:
+                        print(f"Ошибка типа при отправке {photo_path.name}: {e}")
+                    except RuntimeError as e:
+                        print(f"Системная ошибка при отправке {photo_path.name}: {e}")
+                    else:
+                        print(f"Опубликовано фото: {photo_path.name}")
+            except FileNotFoundError:
+                print(f"Файл не найден: {photo_path}")
+            except PermissionError:
+                print(f"Нет доступа к файлу: {photo_path}")
+            except OSError as e:
+                print(f"Ошибка при открытии файла {photo_path.name}: {e}")
             time.sleep(delay_seconds)
 
 
@@ -35,8 +47,8 @@ def main():
         help="Telegram Bot Token (по умолчанию из переменной окружения TELEGRAM_TOKEN)"
     )
     parser.add_argument(
-        "-c", "--channel", type=str, default=os.getenv("CHANNEL_ID"),
-        help="ID Telegram канала (по умолчанию из переменной окружения CHANNEL_ID)"
+        "-c", "--channel", type=str, default=os.getenv("TG_CHAT_ID"),
+        help="ID Telegram канала (по умолчанию из переменной окружения TG_CHAT_ID)"
     )
     parser.add_argument(
         "-d", "--directory", type=str, default="images",
