@@ -73,7 +73,7 @@ TG_CHAT_ID=@имя_вашего_канала
 
 ### Автопубликация фото в Telegram с заданным интервалом
 
-```python publish_photos_telegram.py --token <токен_бота> --channel <ID_канала> --directory <папка_с_фото> --interval <интервал_в_часах>```
+```python main.py --token <токен_бота> --channel <ID_канала> --directory <папка_с_фото> --interval <интервал_в_часах>```
 ##### Аргументы:
 
 * token — токен Telegram-бота (можно указать в .env)
