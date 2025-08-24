@@ -5,15 +5,15 @@ from common_utils import download_image
 from main import load_dotenv
 
 
-def fetch_spacex_launch_photos(launch_id: Optional[str] = None) -> None:
+def fetch_spacex_launch_photos(launch_id: str = "latest") -> None:
     base_url = "https://api.spacexdata.com/v5/launches/"
-    url = f"{base_url}{launch_id}" if launch_id else f"{base_url}latest"
+    url = f"{base_url}{launch_id}"
 
     response = requests.get(url)
     response.raise_for_status()
 
-    data = response.json()
-    photos = data.get("links", {}).get("flickr", {}).get("original", [])
+    spacex_launch_info = response.json()
+    photos = spacex_launch_info.get("links", {}).get("flickr", {}).get("original", [])
     folder = Path("images")
 
     for num, photo_url in enumerate(photos):

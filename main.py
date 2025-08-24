@@ -2,12 +2,14 @@ import argparse
 import os
 import random
 import time
+import asyncio
 from pathlib import Path
 from dotenv import load_dotenv
 from telegram import Bot
+from telegram.error import TelegramError
 
 
-def publish_photos_loop(token: str, tg_chat_id: str, folder: Path, delay_seconds: int):
+async def publish_photos_loop(token: str, tg_chat_id: str, folder: Path, delay_seconds: int):
     bot = Bot(token=token)
     photos = list(folder.glob("*.*"))
     if not photos:
@@ -20,22 +22,33 @@ def publish_photos_loop(token: str, tg_chat_id: str, folder: Path, delay_seconds
             try:
                 with open(photo_path, "rb") as photo_file:
                     try:
-                        bot.send_photo(chat_id=tg_chat_id, photo=photo_file)
+                        await bot.send_photo(chat_id=tg_chat_id, photo=photo_file)
+                        print(f"Опубликовано фото: {photo_path.name}")
+                    except TelegramError as e:
+                        print(f"Ошибка Telegram при отправке {photo_path.name}: {e}")
                     except ValueError as e:
                         print(f"Ошибка значения при отправке {photo_path.name}: {e}")
                     except TypeError as e:
                         print(f"Ошибка типа при отправке {photo_path.name}: {e}")
                     except RuntimeError as e:
                         print(f"Системная ошибка при отправке {photo_path.name}: {e}")
-                    else:
-                        print(f"Опубликовано фото: {photo_path.name}")
             except FileNotFoundError:
                 print(f"Файл не найден: {photo_path}")
             except PermissionError:
                 print(f"Нет доступа к файлу: {photo_path}")
             except OSError as e:
                 print(f"Ошибка при открытии файла {photo_path.name}: {e}")
-            time.sleep(delay_seconds)
+
+
+            await asyncio.sleep(delay_seconds)
+
+
+async def main_async(args):
+    folder = Path(args.directory)
+    delay_seconds = args.interval * 3600
+
+    print(f"Запуск публикации из папки '{folder}', интервал: {args.interval} час(а).")
+    await publish_photos_loop(args.token, args.channel, folder, delay_seconds)
 
 
 def main():
@@ -65,11 +78,11 @@ def main():
         print("Ошибка: необходимо указать Telegram токен и ID канала.")
         return
 
-    folder = Path(args.directory)
-    delay_seconds = args.interval * 3600
 
-    print(f"Запуск публикации из папки '{folder}', интервал: {args.interval} час(а).")
-    publish_photos_loop(args.token, args.channel, folder, delay_seconds)
+    try:
+        asyncio.run(main_async(args))
+    except KeyboardInterrupt:
+        print("\nПубликация остановлена пользователем")
 
 
 if __name__ == "__main__":

@@ -29,11 +29,11 @@ def fetch_nasa_epic_photos(apy_key: str):
         if not date_str or not image_name:
             continue
 
-        dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+        image_datetime = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
 
         image_url = (
             f"https://epic.gsfc.nasa.gov/archive/natural/"
-            f"{dt.year}/{dt.month:02}/{dt.day:02}/png/{image_name}.png"
+            f"{image_datetime.year}/{image_datetime.month:02}/{image_datetime.day:02}/png/{image_name}.png"
         )
 
         filename = folder / f"{image_name}.png"
