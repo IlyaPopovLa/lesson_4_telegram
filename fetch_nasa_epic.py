@@ -6,18 +6,14 @@ from main import load_dotenv
 import os
 
 
-def fetch_nasa_epic_photos(apy_key: str):
+def fetch_nasa_epic_photos(api_key: str):
 
     api_url = "https://api.nasa.gov/EPIC/api/natural/images"
     params = {"api_key": api_key}
 
-    try:
-        response = requests.get(api_url, params=params)
-        response.raise_for_status()
-        epic_response = response.json()
-    except requests.RequestException as e:
-        print(f"Ошибка при получении данных NASA EPIC: {e}")
-        return
+    response = requests.get(api_url, params=params)
+    response.raise_for_status()
+    epic_response = response.json()
 
     folder = Path("images")
     folder.mkdir(parents=True, exist_ok=True)

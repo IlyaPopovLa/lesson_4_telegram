@@ -15,13 +15,9 @@ def fetch_nasa_apod_photos(api_key: str, photos_count: int = PHOTOS_COUNT):
         "count": photos_count
     }
 
-    try:
-        response = requests.get(api_url, params=params)
-        response.raise_for_status()
-        apod_response = response.json()
-    except requests.RequestException as e:
-        print(f"Ошибка при получении данных NASA APOD: {e}")
-        return
+    response = requests.get(api_url, params=params)
+    response.raise_for_status()
+    apod_response = response.json()
 
     photo_urls = []
     if isinstance(apod_response, list):
