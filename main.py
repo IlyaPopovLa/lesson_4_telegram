@@ -39,16 +39,7 @@ async def publish_photos_loop(token: str, tg_chat_id: str, folder: Path, delay_s
             except OSError as e:
                 print(f"Ошибка при открытии файла {photo_path.name}: {e}")
 
-
             await asyncio.sleep(delay_seconds)
-
-
-async def main_async(args):
-    folder = Path(args.directory)
-    delay_seconds = args.interval * 3600
-
-    print(f"Запуск публикации из папки '{folder}', интервал: {args.interval} час(а).")
-    await publish_photos_loop(args.token, args.channel, folder, delay_seconds)
 
 
 def main():
@@ -78,9 +69,13 @@ def main():
         print("Ошибка: необходимо указать Telegram токен и ID канала.")
         return
 
+    folder = Path(args.directory)
+    delay_seconds = args.interval * 3600
+
+    print(f"Запуск публикации из папки '{folder}', интервал: {args.interval} час(а).")
 
     try:
-        asyncio.run(main_async(args))
+        asyncio.run(publish_photos_loop(args.token, args.channel, folder, delay_seconds))
     except KeyboardInterrupt:
         print("\nПубликация остановлена пользователем")
 
