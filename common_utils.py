@@ -25,8 +25,5 @@ def download_images_batch(urls, folder_name, prefix):
     for idx, url in enumerate(urls, start=1):
         ext = get_extension_from_url(url)
         filename = folder_path / f"{prefix}_{idx}{ext}"
-        try:
-            download_image(url, filename)
-            print(f"Успешно скачано: {filename}")
-        except requests.RequestException as e:
-            print(f"Ошибка при скачивании изображения {url}: {e}")
+        download_image(url, filename)
+        print(f"Успешно скачано: {filename}")
