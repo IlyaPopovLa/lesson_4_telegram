@@ -16,14 +16,3 @@ def download_image(url, filename):
 
     with open(filename, 'wb') as file:
         file.write(response.content)
-
-
-def download_images_batch(urls, folder_name, prefix):
-    folder_path = Path(folder_name)
-    folder_path.mkdir(parents=True, exist_ok=True)
-
-    for idx, url in enumerate(urls, start=1):
-        ext = get_extension_from_url(url)
-        filename = folder_path / f"{prefix}_{idx}{ext}"
-        download_image(url, filename)
-        print(f"Успешно скачано: {filename}")
